@@ -1,0 +1,375 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: grafana-dashboard-spam2000
+  labels:
+    grafana_dashboard: "1"
+data:
+  spam2000.json: |-
+    {
+      "annotations": { "list": [] },
+      "editable": true,
+      "fiscalYearStartMonth": 0,
+      "graphTooltip": 1,
+      "links": [],
+      "panels": [
+        {
+          "title": "random_gauge_1 — Series Count",
+          "description": "Number of active time series for random_gauge_1",
+          "type": "stat",
+          "gridPos": { "h": 4, "w": 8, "x": 0, "y": 0 },
+          "datasource": { "type": "prometheus", "uid": "" },
+          "fieldConfig": {
+            "defaults": {
+              "thresholds": {
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 50 },
+                  { "color": "red", "value": 100 }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
+          "targets": [
+            {
+              "expr": "count(random_gauge_1)",
+              "legendFormat": "series",
+              "refId": "A",
+              "instant": true
+            }
+          ]
+        },
+        {
+          "title": "random_gauge_2 — Series Count",
+          "description": "Number of active time series for random_gauge_2",
+          "type": "stat",
+          "gridPos": { "h": 4, "w": 8, "x": 8, "y": 0 },
+          "datasource": { "type": "prometheus", "uid": "" },
+          "fieldConfig": {
+            "defaults": {
+              "thresholds": {
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 50 },
+                  { "color": "red", "value": 100 }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
+          "targets": [
+            {
+              "expr": "count(random_gauge_2)",
+              "legendFormat": "series",
+              "refId": "A",
+              "instant": true
+            }
+          ]
+        },
+        {
+          "title": "random_gauge_3 — Series Count",
+          "description": "Number of active time series for random_gauge_3",
+          "type": "stat",
+          "gridPos": { "h": 4, "w": 8, "x": 16, "y": 0 },
+          "datasource": { "type": "prometheus", "uid": "" },
+          "fieldConfig": {
+            "defaults": {
+              "thresholds": {
+                "steps": [
+                  { "color": "green", "value": null },
+                  { "color": "yellow", "value": 50 },
+                  { "color": "red", "value": 100 }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background" },
+          "targets": [
+            {
+              "expr": "count(random_gauge_3)",
+              "legendFormat": "series",
+              "refId": "A",
+              "instant": true
+            }
+          ]
+        },
+        {
+          "title": "Random Gauges Over Time",
+          "description": "Sum of all random gauge values over time",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 24, "x": 0, "y": 4 },
+          "datasource": { "type": "prometheus", "uid": "" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "fillOpacity": 10 }
+            },
+            "overrides": []
+          },
+          "targets": [
+            {
+              "expr": "sum(random_gauge_1)",
+              "legendFormat": "random_gauge_1",
+              "refId": "A"
+            },
+            {
+              "expr": "sum(random_gauge_2)",
+              "legendFormat": "random_gauge_2",
+              "refId": "B"
+            },
+            {
+              "expr": "sum(random_gauge_3)",
+              "legendFormat": "random_gauge_3",
+              "refId": "C"
+            }
+          ]
+        },
+        {
+          "title": "name_gauge — Top 10 by Value",
+          "description": "Highest name_gauge values by name/job",
+          "type": "bargauge",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 12 },
+          "datasource": { "type": "prometheus", "uid": "" },
+          "fieldConfig": {
+            "defaults": {
+              "thresholds": {
+                "steps": [
+                  { "color": "blue", "value": null },
+                  { "color": "green", "value": 5 },
+                  { "color": "yellow", "value": 10 },
+                  { "color": "red", "value": 20 }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "options": {
+            "orientation": "horizontal",
+            "displayMode": "gradient",
+            "reduceOptions": { "calcs": ["lastNotNull"] }
+          },
+          "targets": [
+            {
+              "expr": "topk(10, name_gauge)",
+              "legendFormat": "{{`{{name}}`}} ({{`{{job}}`}})",
+              "refId": "A",
+              "instant": true
+            }
+          ]
+        },
+        {
+          "title": "name_gauge — Total Series & Sum",
+          "description": "Total count and sum of all name_gauge series",
+          "type": "stat",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 12 },
+          "datasource": { "type": "prometheus", "uid": "" },
+          "fieldConfig": {
+            "defaults": {
+              "thresholds": {
+                "steps": [
+                  { "color": "green", "value": null }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "options": { "reduceOptions": { "calcs": ["lastNotNull"] }, "colorMode": "background", "graphMode": "area" },
+          "targets": [
+            {
+              "expr": "count(name_gauge)",
+              "legendFormat": "Total Series",
+              "refId": "A",
+              "instant": true
+            },
+            {
+              "expr": "sum(name_gauge)",
+              "legendFormat": "Sum of Values",
+              "refId": "B",
+              "instant": true
+            }
+          ]
+        },
+        {
+          "title": "ordered_histogram — Request Duration Distribution",
+          "description": "Distribution of ordered_histogram values across buckets",
+          "type": "heatmap",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 20 },
+          "datasource": { "type": "prometheus", "uid": "" },
+          "fieldConfig": { "defaults": {}, "overrides": [] },
+          "options": {
+            "calculate": false,
+            "color": { "scheme": "Oranges" },
+            "yAxis": { "unit": "s" }
+          },
+          "targets": [
+            {
+              "expr": "sum(rate(ordered_histogram_bucket[5m])) by (le)",
+              "legendFormat": "{{`{{le}}`}}",
+              "refId": "A",
+              "format": "heatmap"
+            }
+          ]
+        },
+        {
+          "title": "random_histogram — Distribution",
+          "description": "Distribution of random_histogram values across buckets",
+          "type": "heatmap",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 20 },
+          "datasource": { "type": "prometheus", "uid": "" },
+          "fieldConfig": { "defaults": {}, "overrides": [] },
+          "options": {
+            "calculate": false,
+            "color": { "scheme": "Blues" },
+            "yAxis": { "unit": "s" }
+          },
+          "targets": [
+            {
+              "expr": "sum(rate(random_histogram_bucket[5m])) by (le)",
+              "legendFormat": "{{`{{le}}`}}",
+              "refId": "A",
+              "format": "heatmap"
+            }
+          ]
+        },
+        {
+          "title": "ordered_histogram — Average & P95",
+          "description": "Average and 95th percentile of ordered_histogram",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 28 },
+          "datasource": { "type": "prometheus", "uid": "" },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s",
+              "custom": { "fillOpacity": 10 }
+            },
+            "overrides": []
+          },
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, sum(rate(ordered_histogram_bucket[5m])) by (le))",
+              "legendFormat": "p95",
+              "refId": "A"
+            },
+            {
+              "expr": "histogram_quantile(0.50, sum(rate(ordered_histogram_bucket[5m])) by (le))",
+              "legendFormat": "p50",
+              "refId": "B"
+            },
+            {
+              "expr": "sum(rate(ordered_histogram_sum[5m])) / sum(rate(ordered_histogram_count[5m]))",
+              "legendFormat": "avg",
+              "refId": "C"
+            }
+          ]
+        },
+        {
+          "title": "random_histogram — Average & P95",
+          "description": "Average and 95th percentile of random_histogram",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 28 },
+          "datasource": { "type": "prometheus", "uid": "" },
+          "fieldConfig": {
+            "defaults": {
+              "unit": "s",
+              "custom": { "fillOpacity": 10 }
+            },
+            "overrides": []
+          },
+          "targets": [
+            {
+              "expr": "histogram_quantile(0.95, sum(rate(random_histogram_bucket[5m])) by (le))",
+              "legendFormat": "p95",
+              "refId": "A"
+            },
+            {
+              "expr": "histogram_quantile(0.50, sum(rate(random_histogram_bucket[5m])) by (le))",
+              "legendFormat": "p50",
+              "refId": "B"
+            },
+            {
+              "expr": "sum(rate(random_histogram_sum[5m])) / sum(rate(random_histogram_count[5m]))",
+              "legendFormat": "avg",
+              "refId": "C"
+            }
+          ]
+        },
+        {
+          "title": "Random Gauges by Country (Top 10)",
+          "description": "Top 10 countries by total random_gauge_1 value",
+          "type": "bargauge",
+          "gridPos": { "h": 8, "w": 12, "x": 0, "y": 36 },
+          "datasource": { "type": "prometheus", "uid": "" },
+          "fieldConfig": {
+            "defaults": {
+              "thresholds": {
+                "steps": [
+                  { "color": "blue", "value": null },
+                  { "color": "green", "value": 3 },
+                  { "color": "yellow", "value": 5 }
+                ]
+              }
+            },
+            "overrides": []
+          },
+          "options": {
+            "orientation": "horizontal",
+            "displayMode": "gradient",
+            "reduceOptions": { "calcs": ["lastNotNull"] }
+          },
+          "targets": [
+            {
+              "expr": "topk(10, sum by (country) (random_gauge_1))",
+              "legendFormat": "{{`{{country}}`}}",
+              "refId": "A",
+              "instant": true
+            }
+          ]
+        },
+        {
+          "title": "Container Resource Usage (spam2000)",
+          "description": "CPU and memory usage of the spam2000 container",
+          "type": "timeseries",
+          "gridPos": { "h": 8, "w": 12, "x": 12, "y": 36 },
+          "datasource": { "type": "prometheus", "uid": "" },
+          "fieldConfig": {
+            "defaults": {
+              "custom": { "fillOpacity": 10 }
+            },
+            "overrides": [
+              {
+                "matcher": { "id": "byName", "options": "Memory" },
+                "properties": [{ "id": "unit", "value": "bytes" }, { "id": "custom.axisPlacement", "value": "right" }]
+              },
+              {
+                "matcher": { "id": "byName", "options": "CPU" },
+                "properties": [{ "id": "unit", "value": "short" }]
+              }
+            ]
+          },
+          "targets": [
+            {
+              "expr": "rate(container_cpu_usage_seconds_total{namespace=\"spam2000\", container=\"spam2000\"}[5m])",
+              "legendFormat": "CPU",
+              "refId": "A"
+            },
+            {
+              "expr": "container_memory_working_set_bytes{namespace=\"spam2000\", container=\"spam2000\"}",
+              "legendFormat": "Memory",
+              "refId": "B"
+            }
+          ]
+        }
+      ],
+      "schemaVersion": 39,
+      "tags": ["spam2000", "application"],
+      "templating": { "list": [] },
+      "time": { "from": "now-1h", "to": "now" },
+      "timepicker": {},
+      "timezone": "",
+      "title": "spam2000 Application",
+      "uid": "spam2000-app",
+      "version": 1
+    }
