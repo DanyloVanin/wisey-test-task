@@ -1,5 +1,8 @@
 ## Overrides for victoria-metrics-k8s-stack Helm chart
 
+# -- Shorten generated resource names to stay within 63-char K8s limit
+fullnameOverride: vm-stack
+
 # -- Required when deploying via ArgoCD: fixes VMServiceScrape label selectors
 argocdReleaseOverride: victoria-metrics
 
