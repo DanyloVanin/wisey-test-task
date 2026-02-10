@@ -1,0 +1,6 @@
+apiVersion: v2
+name: spam2000
+description: Helm chart for the spam2000 metrics demo application
+type: application
+version: 0.1.0
+appVersion: "1.1394.355"
