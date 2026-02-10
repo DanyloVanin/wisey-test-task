@@ -6,6 +6,11 @@ SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 # start minikube if not running
 minikube status || minikube start --cpus=4 --memory=7168 --driver=docker --addons=metrics-server
 
+# enable amd64 emulation on Apple Silicon
+if [ "$(uname -m)" = "arm64" ]; then
+  minikube ssh "docker run --rm --privileged tonistiigi/binfmt --install amd64" >/dev/null 2>&1
+fi
+
 # helm repos
 helm repo add argo https://argoproj.github.io/argo-helm 2>/dev/null || true
 helm repo update

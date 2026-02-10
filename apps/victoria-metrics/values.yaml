@@ -1,0 +1,90 @@
+## Overrides for victoria-metrics-k8s-stack Helm chart
+
+# -- Required when deploying via ArgoCD: fixes VMServiceScrape label selectors
+argocdReleaseOverride: victoria-metrics
+
+# -- VMSingle: single-node metrics storage for Minikube
+vmsingle:
+  spec:
+    retentionPeriod: "1d"
+    storage:
+      resources:
+        requests:
+          storage: 2Gi
+    resources:
+      requests:
+        cpu: 100m
+        memory: 256Mi
+      limits:
+        cpu: 500m
+        memory: 512Mi
+
+# -- VMAgent: scrapes all VMServiceScrape/VMPodScrape CRDs by default
+vmagent:
+  spec:
+    resources:
+      requests:
+        cpu: 50m
+        memory: 128Mi
+      limits:
+        cpu: 200m
+        memory: 256Mi
+
+# -- VMAlert & Alertmanager: disabled (not required for demo)
+vmalert:
+  enabled: false
+
+alertmanager:
+  enabled: false
+
+# -- Default dashboards (VM internals, node-exporter, kubelet, etc.)
+defaultDashboards:
+  enabled: true
+
+# -- Grafana: enabled with sidecar for dashboard discovery
+grafana:
+  enabled: true
+  adminPassword: admin
+  sidecar:
+    dashboards:
+      enabled: true
+      label: grafana_dashboard
+      labelValue: "1"
+      searchNamespace: ALL
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 200m
+      memory: 256Mi
+
+# -- node-exporter: host-level metrics
+prometheus-node-exporter:
+  resources:
+    requests:
+      cpu: 20m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+
+# -- kube-state-metrics: Kubernetes object metrics
+kube-state-metrics:
+  resources:
+    requests:
+      cpu: 20m
+      memory: 32Mi
+    limits:
+      cpu: 100m
+      memory: 64Mi
+
+# -- VictoriaMetrics Operator
+victoria-metrics-operator:
+  resources:
+    requests:
+      cpu: 50m
+      memory: 64Mi
+    limits:
+      cpu: 200m
+      memory: 128Mi
