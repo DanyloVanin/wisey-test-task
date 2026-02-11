@@ -1,3 +1,7 @@
+# PRODUCTION: add PodDisruptionBudget (minAvailable: 1) to guarantee availability
+# during voluntary disruptions (node drains, cluster upgrades).
+# PRODUCTION: add securityContext: runAsNonRoot, readOnlyRootFilesystem,
+# drop all capabilities. Restricts blast radius if the container is compromised.
 replicaCount: 2
 
 image:
