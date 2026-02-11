@@ -57,6 +57,21 @@ kubectl get applications -n argocd -w
 
 The vm-k8s-stack also ships built-in dashboards for VictoriaMetrics, node-exporter, and kube-state-metrics.
 
+## Screenshots
+
+**Bootstrap output** — single command deploys everything, prints access info:
+
+![Bootstrap output](docs/img/shell-deploy-output.png)
+
+**ArgoCD** — all 4 applications synced and healthy (root-app, spam2000, victoria-metrics, grafana-dashboards):
+
+![ArgoCD dashboard](docs/img/result-argocd-dashboard.png)
+
+**spam2000 Grafana dashboard** — gauge series counts, random gauges over time, name_gauge top 10, histogram distributions, container resource usage:
+
+![spam2000 dashboard top](docs/img/grafana-screen-1.png)
+![spam2000 dashboard bottom](docs/img/grafana-screen-2.png)
+
 ## Repo structure
 
 ```
