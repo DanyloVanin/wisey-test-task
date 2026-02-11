@@ -9,7 +9,7 @@ for cmd in docker minikube kubectl helm; do
 done
 docker info &>/dev/null || { echo "Docker is not running"; exit 1; }
 
-# start minikube
+# start minikube (idempotent, skips if already running)
 minikube status --format='{{.Host}}' 2>/dev/null | grep -q "Running" \
   || minikube start --cpus=4 --memory=7168 --driver=docker --addons=metrics-server
 
@@ -54,7 +54,7 @@ ARGOCD_PW=$(kubectl -n argocd get secret argocd-initial-admin-secret -o jsonpath
 echo "ArgoCD:  kubectl port-forward svc/argocd-server -n argocd 8080:80"
 echo "         http://localhost:8080  admin / $ARGOCD_PW"
 echo ""
-echo "Grafana: kubectl port-forward svc/vm-stack-grafana -n monitoring 3000:80"
+echo "Grafana: kubectl port-forward svc/victoria-metrics-grafana -n monitoring 3000:80"
 echo "         http://localhost:3000  admin / admin"
 echo ""
 echo "spam2000: kubectl port-forward svc/spam2000 -n spam2000 3001:3000"

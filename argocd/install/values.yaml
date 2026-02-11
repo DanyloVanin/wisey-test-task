@@ -1,15 +1,14 @@
-## ArgoCD Helm values — lightweight config for Minikube
-## Chart: argo/argo-cd
-
 global:
   logging:
     level: warn
 
 configs:
   params:
+    # PRODUCTION: remove this, terminate TLS at ingress (cert-manager + nginx/ALB or other ways of exposing)
     server.insecure: true
 
 server:
+  # PRODUCTION: bump for HA, add ingress with TLS
   resources:
     requests:
       cpu: 50m
@@ -45,11 +44,14 @@ redis:
       cpu: 200m
       memory: 128Mi
 
+# PRODUCTION: enable dex for SSO (OIDC/SAML)
 dex:
   enabled: false
 
+# PRODUCTION: enable for Slack/PagerDuty notifications on sync failures
 notifications:
   enabled: false
 
+# PRODUCTION: enable if using multi-cluster or multi-tenant setup with ApplicationSets
 applicationSet:
   replicas: 0

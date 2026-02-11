@@ -2,6 +2,7 @@ replicaCount: 1
 
 image:
   repository: andriiuni/spam2000
+  # PRODUCTION: pin by SHA digest (andriiuni/spam2000@sha256:...) for immutable deploys
   tag: "1.1394.355"
   pullPolicy: IfNotPresent
 
@@ -11,6 +12,7 @@ service:
 
 containerPort: 3000
 
+# PRODUCTION: right-size after load testing; consider VPA for automatic tuning
 resources:
   requests:
     cpu: 50m
@@ -19,25 +21,28 @@ resources:
     cpu: 200m
     memory: 256Mi
 
+# startupProbe gives the container up to 15s (5 × 3s) to become ready
+# before liveness kicks in — plenty for a native amd64 binary.
 probes:
   startup:
     path: /health
-    periodSeconds: 5
-    timeoutSeconds: 3
-    failureThreshold: 12
+    periodSeconds: 3
+    timeoutSeconds: 2
+    failureThreshold: 5
   liveness:
     path: /health
-    periodSeconds: 15
-    timeoutSeconds: 3
+    periodSeconds: 10
+    timeoutSeconds: 2
     failureThreshold: 3
   readiness:
     path: /health
-    periodSeconds: 10
-    timeoutSeconds: 3
+    periodSeconds: 5
+    timeoutSeconds: 2
     failureThreshold: 3
 
 metrics:
   enabled: true
   path: /metrics
   port: 3000
+  # PRODUCTION: 15s for higher-resolution alerting; 30s is fine for dashboards
   interval: 30s

@@ -1,18 +1,21 @@
 ## Overrides for victoria-metrics-k8s-stack Helm chart
 
-# -- Shorten generated resource names to stay within 63-char K8s limit
+# Shorten generated resource names to stay within 63-char K8s limit
 fullnameOverride: vm-stack
 
-# -- Required when deploying via ArgoCD: fixes VMServiceScrape label selectors
+# Required when deploying via ArgoCD: fixes VMServiceScrape label selectors
 argocdReleaseOverride: victoria-metrics
 
-# -- VMSingle: single-node metrics storage for Minikube
+# PRODUCTION: switch to vmcluster (vmselect/vminsert/vmstorage) for HA and horizontal scaling.
+# VMSingle is fine here, single node, no replication needed for a demo.
 vmsingle:
   spec:
+    # PRODUCTION: potentially 14d+ retention, backed by persistent EBS/PD volumes with snapshots
     retentionPeriod: "1d"
     storage:
       resources:
         requests:
+          # PRODUCTION: size based on ingestion rate × retention
           storage: 2Gi
     resources:
       requests:
@@ -22,7 +25,6 @@ vmsingle:
         cpu: 500m
         memory: 512Mi
 
-# -- VMAgent: scrapes all VMServiceScrape/VMPodScrape CRDs by default
 vmagent:
   spec:
     resources:
@@ -33,20 +35,20 @@ vmagent:
         cpu: 200m
         memory: 256Mi
 
-# -- VMAlert & Alertmanager: disabled (not required for demo)
+# PRODUCTION: enable both: VMAlert for recording/alerting rules, Alertmanager for routing
+# to Slack/PagerDuty. Without these there's no on-call alerting.
 vmalert:
   enabled: false
 
 alertmanager:
   enabled: false
 
-# -- Default dashboards (VM internals, node-exporter, kubelet, etc.)
 defaultDashboards:
   enabled: true
 
-# -- Grafana: enabled with sidecar for dashboard discovery
 grafana:
   enabled: true
+  # PRODUCTION: use External Secrets Operator to pull from Vault/AWS Secrets Manager/GC Secret Manager
   adminPassword: admin
   sidecar:
     dashboards:
@@ -62,7 +64,6 @@ grafana:
       cpu: 200m
       memory: 256Mi
 
-# -- node-exporter: host-level metrics
 prometheus-node-exporter:
   resources:
     requests:
@@ -72,7 +73,6 @@ prometheus-node-exporter:
       cpu: 100m
       memory: 64Mi
 
-# -- kube-state-metrics: Kubernetes object metrics
 kube-state-metrics:
   resources:
     requests:
@@ -82,7 +82,6 @@ kube-state-metrics:
       cpu: 100m
       memory: 64Mi
 
-# -- VictoriaMetrics Operator
 victoria-metrics-operator:
   resources:
     requests:

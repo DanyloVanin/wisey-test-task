@@ -9,10 +9,11 @@ spec:
   project: default
   source:
     repoURL: https://github.com/DanyloVanin/wisey-test-task.git
-    targetRevision: gitops-application-with-monitoring  # TODO: change to main before merge
+    targetRevision: main
     path: apps/grafana-dashboards
   destination:
     server: https://kubernetes.default.svc
+    # Same namespace as Grafana so the sidecar discovers dashboard ConfigMaps
     namespace: monitoring
   syncPolicy:
     automated:

@@ -3,18 +3,24 @@ kind: Application
 metadata:
   name: root-app
   namespace: argocd
+  # Cascade delete: removing root-app cleans up all child apps and their resources.
+  # Without this finalizer, deleting the Application CRD would orphan child resources.
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
+  # PRODUCTION: create dedicated AppProjects with source/destination restrictions and RBAC
+  # instead of using the default project which has no restrictions.
   project: default
   source:
     repoURL: https://github.com/DanyloVanin/wisey-test-task.git
-    targetRevision: gitops-application-with-monitoring  # TODO: change to main before merge
+    targetRevision: main
     path: argocd/applications
   destination:
     server: https://kubernetes.default.svc
     namespace: argocd
   syncPolicy:
+    # PRODUCTION: consider manual sync for production apps with sync windows
+    # to prevent off-hours deploys. Automated sync is OK for dev/staging.
     automated:
       prune: true
       selfHeal: true

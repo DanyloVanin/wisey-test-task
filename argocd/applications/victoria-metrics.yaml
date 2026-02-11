@@ -7,15 +7,18 @@ metadata:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: default
+  # Multi-source: Helm chart from external registry + values from our Git repo.
+  # This lets us version-control value overrides while tracking upstream chart updates.
   sources:
     - repoURL: https://victoriametrics.github.io/helm-charts/
       chart: victoria-metrics-k8s-stack
+      # PRODUCTION: pin to exact version (e.g. 0.70.0) and update intentionally
       targetRevision: 0.70.*
       helm:
         valueFiles:
           - $values/apps/victoria-metrics/values.yaml
     - repoURL: https://github.com/DanyloVanin/wisey-test-task.git
-      targetRevision: gitops-application-with-monitoring  # TODO: change to main before merge
+      targetRevision: main
       ref: values
   destination:
     server: https://kubernetes.default.svc
@@ -26,8 +29,11 @@ spec:
       selfHeal: true
     syncOptions:
       - CreateNamespace=true
+      # ServerSideApply avoids "metadata.annotations too long" on CRDs
       - ServerSideApply=true
     retry:
+      # Higher retry limit than other apps: CRDs sometimes need a second pass
+      # when the operator isn't ready yet to serve the custom resources.
       limit: 5
       backoff:
         duration: 10s
